@@ -1,0 +1,194 @@
+<div class="country-card" (click)="openCountryDetails(countryDetailsModal, country)">
+  <div class="country-label">{{country.name}}</div>
+  <div><span class="label">Region: </span>{{country.region}}</div>
+  <div><span class="label">Population: </span>{{formatNumberWithCommas(country.population)}}</div>
+  <div class="flag-container" [ngStyle]="{'background-image': 'url(' + country.flag + ')'}"></div>
+</div>
+
+<ng-template #countryDetailsModal let-c="close" let-d="dismiss">
+  <!-- START: modal-header -->
+  <div class="modal-header">  
+    <h4>{{modalData.name}}</h4>
+    <button type="button" class="close close-icon" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <!-- END: modal-header -->
+
+  <!-- START: modal-body -->
+  <div class="modal-body">
+    <!-- START: first row -->    
+    <div class="row">
+      <!-- START: left col, "General Information" -->
+      <div class="col-lg-6">
+        <h5>General Information</h5>
+        <div class="row">
+          <div class="col-sm-4 label">Demonym</div>
+          <div class="col-sm-8">{{modalData.demonym}}</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 label">Population</div>
+          <div class="col-sm-8">{{formatNumberWithCommas(modalData.population)}}</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 label">Timezones</div>
+          <div class="col-sm-8">{{modalData.timezones.join(", ")}}</div>
+        </div>
+        <div class="row"> <!-- START: Currencies div -->
+          <div class="col-sm-4 label">Currencies</div>
+          <div class="col-sm-8">
+            <table>
+              <tr>
+                <td class="label">Code</td>
+                <td class="label">Name</td>
+                <td class="label">Symbol</td>
+              </tr>
+              <tr *ngFor="let currencyObj of modalData.currencies">
+                <td>{{currencyObj.code}}</td>
+                <td>{{currencyObj.name}}</td>
+                <td>{{currencyObj.symbol}}</td>
+              </tr>
+            </table>
+          </div>
+        </div> <!-- START: Currencies div -->
+        <div class="row">
+          <div class="col-sm-4 label">Languages</div>
+          <div class="col-sm-8">
+            <table>
+              <tr>
+                <td class="label">Name</td>
+                <td class="label">Native Name</td>
+                <td class="label">ISO 639-1</td>
+                <td class="label">ISO 639-2</td>
+              </tr>
+              <tr *ngFor="let language of modalData.languages">
+                <td>{{language.name}}</td>
+                <td>{{language.nativeName}}</td>
+                <td>{{language.iso639_1}}</td>
+                <td>{{language.iso639_2}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- END: left col, "General Information" -->
+      <!-- START: right col, "Identifiers" -->      
+      <div class="col-lg-6">
+        <h5>Identifiers</h5>
+        <div class="row">
+          <div class="col-sm-4 label">Name</div>
+          <div class="col-sm-8">{{modalData.name}}</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 label">Native Name</div>
+          <div class="col-sm-8">{{modalData.nativeName}}</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 label">Alternate Names</div>
+          <div class="col-sm-8">{{modalData.altSpellings.join(", ")}}</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 label">Translations</div>
+          <div class="col-sm-8">  
+            <div *ngIf="!showTranslations">
+              <button class="btn" (click)="showTranslations = true;">Show translations</button>
+            </div>
+            <div *ngIf="showTranslations">
+              <button class="btn" (click)="showTranslations = false;">Hide translations</button>
+              <ul>
+                <li *ngFor="let translation of modalData.translations | keyvalue">
+                  <span class="label">{{translation.key}}:</span>
+                  {{translation.value}}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>  
+        <div class="row">
+          <div class="col-sm-4 label">Alpha Codes</div>
+          <div class="col-sm-8">{{modalData.alpha2Code}}, {{modalData.alpha3Code}}</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 label">Numeric Code</div>
+          <div class="col-sm-8">{{modalData.numericCode}}</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 label">CIOC</div>
+          <div class="col-sm-8">{{modalData.cioc}}</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 label">Flag</div>
+          <div class="col-sm-8 flag-container"
+            [ngStyle]="{'background-image': 'url(' + modalData.flag + ')', 'height': '20vh', 'background-position': 'left'}"></div>
+        </div>
+      </div>
+      <!-- END: right col, "Identifiers" -->
+    </div>
+    <!-- END: first row -->
+
+    <!-- START: second row, "Geographical Information" -->
+    <h5>Geographical Information</h5>
+      <div class="row">
+        <div class="col-sm-2 label">Capital</div>
+        <div class="col-sm-10">{{modalData.capital}}</div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2 label">Region</div>
+        <div class="col-sm-10">{{modalData.region}}</div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2 label">Subregion</div>
+        <div class="col-sm-10">{{modalData.subregion}}</div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2 label">Coordinates</div>
+        <div class="col-sm-10">
+          <i>Latitude:</i> {{modalData.latlng[0]}}, <i>Longitude:</i> {{modalData.latlng[1]}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2 label">Borders</div>
+        <div class="col-sm-10" *ngIf="modalData.borders.length != 0">{{modalData.borders.join(", ")}}</div>
+        <div class="col-sm-10" *ngIf="modalData.borders.length == 0"><i>No bordering country</i></div>
+      </div>
+    <!-- END: second row, "Geographical Information" -->
+
+    <!-- START: third row, "Economy" -->
+    <h5>Economy</h5>
+      <div class="row">
+        <div class="col-sm-2 label">Gini Index</div>
+        <div class="col-sm-10" *ngIf="modalData.gini">{{modalData.gini}}</div>
+        <div class="col-sm-10" *ngIf="!modalData.gini"><i>No data available</i></div>
+      </div>
+      <!-- START: "Regional Blocs" -->
+      <div class="row">
+        <div class="col-sm-2 label">Regional Blocs</div>
+        <div class="col-sm-10" *ngIf="modalData.regionalBlocs.length != 0">
+          <table>
+            <tr>
+              <td class="label">Acronym</td>
+              <td class="label">Name</td>
+              <td class="label">Other Acronyms</td>
+              <td class="label">Other Names</td>
+            </tr>
+            <tr *ngFor="let regionalBloc of modalData.regionalBlocs">
+              <td>{{regionalBloc.acronym}}</td>
+              <td>{{regionalBloc.name}}</td>
+              <td>
+                <span *ngIf="regionalBloc.otherAcronyms.length != 0">{{regionalBloc.otherAcronyms.join(", ")}}</span>
+                <span *ngIf="regionalBloc.otherAcronyms.length == 0">N/A</span>                  
+              </td>
+              <td>
+                <span *ngIf="regionalBloc.otherNames.length != 0">{{regionalBloc.otherNames.join(", ")}}</span>
+                <span *ngIf="regionalBloc.otherNames.length == 0">N/A</span>                  
+              </td>
+            </tr>
+          </table>
+        </div>          
+        <div class="col-sm-10" *ngIf="modalData.regionalBlocs.length == 0"><i>No regional trading blocs</i></div>          
+      </div>
+      <!-- END: "Regional Blocs" -->
+    <!-- END: third row, "Economy" -->
+  </div>
+  <!-- END: modal-body -->
+</ng-template>

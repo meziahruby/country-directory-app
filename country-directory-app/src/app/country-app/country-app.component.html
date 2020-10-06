@@ -1,0 +1,21 @@
+<div class="row header">
+  <div class="col-sm-6 title">
+    Country Directory
+  </div>
+
+  <div class="col-sm-6 filter-container">
+    <input class="search" type="text" placeholder="🔍 Search by country" [(ngModel)]="countryNameInput" (ngModelChange)="filterByName()">
+    or
+    <span class="dropdown">
+      Filter by region:
+      <select [(ngModel)]="selectedRegion" (ngModelChange)="filterByRegion()">
+        <option *ngFor="let region of regions" [ngValue]="region">{{region}}</option>
+      </select>
+      <span class="icon" *ngIf="selectedRegion" (click)="selectedRegion = null; getAllCountries();"> 🗑️</span>
+    </span>
+  </div>
+
+</div>
+
+<div class="loader" *ngIf="loading">Loading...</div>
+<app-country-directory *ngIf="!loading" [countriesList]="countriesList" [pageSize]="pageSize"></app-country-directory>

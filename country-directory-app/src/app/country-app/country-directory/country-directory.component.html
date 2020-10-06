@@ -1,0 +1,13 @@
+<div class="directory-container">
+  <app-country-card
+    *ngFor="let country of countriesList | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize"
+    [country]="country">
+  </app-country-card>
+</div>
+
+<div class="pagination-container">
+    <ngb-pagination
+      [(page)]="page" [pageSize]="pageSize" [collectionSize]="countriesList.length"
+      [maxSize]="5" [rotate]="true" [boundaryLinks]="true">
+    </ngb-pagination>
+  </div>
