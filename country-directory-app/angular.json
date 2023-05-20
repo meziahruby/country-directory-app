@@ -118,8 +118,14 @@
               "devServerTarget": "country-directory-app:serve:production"
             }
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy"
         }
       }
     }},
-  "defaultProject": "country-directory-app"
+  "defaultProject": "country-directory-app",
+  "cli": {
+    "analytics": false
+  }
 }
